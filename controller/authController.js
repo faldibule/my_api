@@ -1,6 +1,7 @@
 const User = require('../model/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Post = require('../model/Post')
 
 const authController = {
     register: async(req, res) => {
@@ -94,7 +95,20 @@ const authController = {
         res.status(200).json({
             email: req.auth.id
         })
-    }
+    },
+
+    getUser: async(req, res) => {
+        try {
+            const user = await User.find({username: req.body.username})
+            console.log(user)
+            res.status(200).json({
+                message: 'Data User',
+                user,
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    },
 
 
 }

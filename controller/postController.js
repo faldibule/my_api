@@ -1,6 +1,6 @@
 const Post = require("../model/Post")
 const cloudinary = require('../utils/cloudinary')
-const { home } = require('../middleware/paginate')
+const { home, userPost } = require('../middleware/paginate')
 const escapeHTML = require("escape-html")
 const moment = require('moment')
 
@@ -14,6 +14,19 @@ const postController = {
                 posts
             })
         }catch(err){
+            console.log(err)
+        }
+    },
+
+    findByUserId: async(req, res) =>{
+        try {
+            const currentPage = parseInt(req.body.page)
+            const posts = await userPost(Post, currentPage, 3, req.body.userId)
+            res.status(200).json({
+                message: 'Data Post By User ID',
+                posts
+            })
+        } catch (err) {
             console.log(err)
         }
     },
