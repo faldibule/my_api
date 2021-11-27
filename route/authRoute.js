@@ -9,5 +9,7 @@ route.post('/user', verifyUserToken, authController.user)
 route.post('/login', authController.login)
 route.post('/register', authController.register)
 route.post('/profil', authController.getUser)
+route.post('/edit_profil', authController.editProfil)
+route.post('/edit_password', authController.editPassword)
 
 module.exports = route

@@ -110,6 +110,81 @@ const authController = {
         }
     },
 
+    editProfil: async(req, res) => {
+        try {
+            const userById = await User.findOne({_id: req.body.userId})
+            console.log(userById)
+            if(!req.body.isEmailSame){
+                const userByEmail = await User.find({email: req.body.email})
+                if(userByEmail){
+                    return res.status(403).json({
+                        message: 'Username/Email Sudah Terdaftar'
+                    })
+                }
+            }
+            if(!req.body.isUsernameSame){
+                const userByUsername = await User.find({username: req.body.username})
+                if(userByUsername){
+                    return res.status(403).json({
+                        message: 'Username/Email Sudah Terdaftar'
+                    })
+                }
+            }
+            
+            
+            const cekPassword = await bcrypt.compare(req.body.password, userById.password)
+            if(cekPassword){
+                const cek = await User.updateOne({_id: req.body.userId}, {
+                    $set: {
+                        nama: req.body.nama,
+                        email: req.body.email,
+                        username: req.body.username
+                    }
+                })
+                if(cek){
+                    return res.status(200).json({
+                        message: 'Berhasil Mengubah Data Profil'
+                    })
+                }
+            }else{
+                return res.status(403).json({
+                    message: 'Password Salah'
+                })
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
+    editPassword: async(req, res) => {
+        try {
+            const userById = await User.findOne({_id: req.body.userId})
+            const cekPassword = await bcrypt.compare(req.body.password, userById.password)
+            if(cekPassword){
+                const hashedPassword = await bcrypt.hash(req.body.newPassword, 10)
+                const cek = await User.updateOne({_id: req.body.userId}, {
+                    $set:{
+                        password: hashedPassword
+                    }
+                })
+                if(cek){
+                    res.status(200).json({
+                        message: "Berhasil Mengganti Password"
+                    })
+                }else{
+                    res.status(403).json({
+                        message: "Gagal Ganti Password"
+                    })
+                }
+            }else{
+                res.status(403).json({
+                    message: 'Password Salah'
+                })
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
 }
 
