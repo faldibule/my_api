@@ -2,6 +2,8 @@ const User = require('../model/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Post = require('../model/Post')
+const cloudinary = require('../utils/cloudinary')
+
 
 const authController = {
     register: async(req, res) => {
@@ -185,8 +187,39 @@ const authController = {
         } catch (err) {
             console.log(err)
         }
-    }
+    },
 
+    editFoto: async(req, res) => {
+        try {
+            if(typeof req.file_error !== 'undefined'){
+                return res.status(403).json({
+                    message: req.file_error,
+                })
+            }
+            const user = await User.findOne({username: req.body.username})
+            if(user.image !== process.env.IMAGE_DEFAULT && user.image_id !== ''){
+                const x = await cloudinary.uploader.destroy(user.image_id)
+            }
+            const upload = await cloudinary.uploader.upload(req.file.path, {folder: 'user'})
+            const image = upload.secure_url
+            const image_id = upload.public_id
+
+            const cek = await User.updateOne({username: req.body.username}, {
+                $set: {
+                    image,
+                    image_id
+                }
+            })
+            if(cek){
+                return res.status(200).json({
+                    message: "Berhasil Ganti Foto"
+                })
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 module.exports = authController
