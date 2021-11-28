@@ -59,7 +59,7 @@ const authController = {
                 cekPassword = await bcrypt.compare(password, cek.password)
                 if(cekPassword){
                     const expired = 30000
-                    const token = await jwt.sign({id: cek._id}, process.env.SECRET, {
+                    const token = await jwt.sign({username: cek.username}, process.env.SECRET, {
                         expiresIn: expired
                     })
                     res.status(200).json({
