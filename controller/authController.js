@@ -113,10 +113,10 @@ const authController = {
     editProfil: async(req, res) => {
         try {
             const userById = await User.findOne({_id: req.body.userId})
-            console.log(userById)
             if(!req.body.isEmailSame){
                 const userByEmail = await User.find({email: req.body.email})
-                if(userByEmail){
+                console.log(userByEmail)
+                if(userByEmail.length > 0){
                     return res.status(403).json({
                         message: 'Username/Email Sudah Terdaftar'
                     })
@@ -124,7 +124,8 @@ const authController = {
             }
             if(!req.body.isUsernameSame){
                 const userByUsername = await User.find({username: req.body.username})
-                if(userByUsername){
+                console.log(userByUsername)
+                if(userByUsername.length > 0){
                     return res.status(403).json({
                         message: 'Username/Email Sudah Terdaftar'
                     })
