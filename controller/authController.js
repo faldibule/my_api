@@ -148,9 +148,9 @@ const authController = {
                     return res.status(200).json({
                         message: 'Berhasil Mengubah Data Profil',
                         data: {
-                            nama,
-                            email,
-                            username
+                            nama: req.body.nama,
+                            email: req.body.email,
+                            username: req.body.username
                         }
                     })
                 }
