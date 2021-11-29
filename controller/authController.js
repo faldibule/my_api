@@ -146,7 +146,12 @@ const authController = {
                 })
                 if(cek){
                     return res.status(200).json({
-                        message: 'Berhasil Mengubah Data Profil'
+                        message: 'Berhasil Mengubah Data Profil',
+                        data: {
+                            nama,
+                            email,
+                            username
+                        }
                     })
                 }
             }else{
@@ -212,7 +217,11 @@ const authController = {
             })
             if(cek){
                 return res.status(200).json({
-                    message: "Berhasil Ganti Foto"
+                    message: "Berhasil Ganti Foto",
+                    data: {
+                        image,
+                        image_id
+                    }
                 })
             }
 
