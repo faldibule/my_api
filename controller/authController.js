@@ -137,6 +137,13 @@ const authController = {
             
             const cekPassword = await bcrypt.compare(req.body.password, userById.password)
             if(cekPassword){
+                let token = ''
+                if(userById.username !== req.body.username){
+                    const expired = 30000
+                    token = await jwt.sign({username: req.body.username}, process.env.SECRET, {
+                        expiresIn: expired
+                    })
+                }
                 const cek = await User.updateOne({_id: req.body.userId}, {
                     $set: {
                         nama: req.body.nama,
@@ -148,6 +155,7 @@ const authController = {
                     return res.status(200).json({
                         message: 'Berhasil Mengubah Data Profil',
                         data: {
+                            token,
                             nama: req.body.nama,
                             email: req.body.email,
                             username: req.body.username
