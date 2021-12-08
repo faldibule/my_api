@@ -2,7 +2,7 @@ const Post = require("../model/Post")
 const cloudinary = require('../utils/cloudinary')
 const { home, userPost } = require('../middleware/paginate')
 const escapeHTML = require("escape-html")
-const moment = require('moment')
+const Comment = require("../model/Comment")
 
 const postController = {
     find: async(req, res) =>{
@@ -81,10 +81,11 @@ const postController = {
     delete: async(req, res) => {
         try {
             const post = await Post.findOne({_id: req.params.id})
+            const delComment = await Comment.deleteOne({post: req.params.id})
             if(post.image !== '' && post.image_id !== '' ){
                 await cloudinary.uploader.destroy(post.image_id)
-                await Post.deleteMany({_id: req.params.id})
             }
+            await Post.deleteMany({_id: req.params.id})
             res.status(200).json({
                 message: "berhasil delete"
             })

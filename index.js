@@ -5,7 +5,8 @@ const app = express()
 const port = process.env.PORT || 3000;
 const authRoute = require('./route/authRoute')
 const postRoute = require('./route/postRoute')
-const cors = require('cors')
+const commentRoute = require('./route/commentRoute')
+const cors = require('cors');
 require('./utils/db')
 
 
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 
 app.use('/v1/auth', authRoute)
 app.use('/v1/post', postRoute)
+app.use('/v1/comment', commentRoute)
 
 
 app.listen(port, () => {
